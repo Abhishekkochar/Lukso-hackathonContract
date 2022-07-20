@@ -1,0 +1,25 @@
+{
+  "name": "lukso-hackathoncontract",
+  "version": "1.0.0",
+  "description": "Smart contract - Lukso hackathon",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abhishekkochar/Lukso-hackathonContract.git"
+  },
+  "author": "Abhishek & Amit",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abhishekkochar/Lukso-hackathonContract/issues"
+  },
+  "homepage": "https://github.com/Abhishekkochar/Lukso-hackathonContract#readme",
+  "dependencies": {
+    "hardhat": "^2.10.1"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^1.0.2"
+  }
+}
