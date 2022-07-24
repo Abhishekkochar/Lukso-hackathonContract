@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Abhishekkochar/Lukso-hackathonContract#readme",
   "dependencies": {
+    "@lukso/lsp-smart-contracts": "^0.6.2",
     "hardhat": "^2.10.1"
   },
   "devDependencies": {
