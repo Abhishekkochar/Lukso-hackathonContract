@@ -18,8 +18,11 @@
   "homepage": "https://github.com/Abhishekkochar/Lukso-hackathonContract#readme",
   "dependencies": {
     "@erc725/erc725.js": "^0.14.3",
+    "@lukso/lsp-factory.js": "^2.3.3",
     "@lukso/lsp-smart-contracts": "^0.6.2",
-    "hardhat": "^2.10.1"
+    "dotenv": "^16.0.1",
+    "hardhat": "^2.10.1",
+    "web3": "^1.7.4"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^1.0.2"
