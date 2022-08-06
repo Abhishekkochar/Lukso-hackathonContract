@@ -7,6 +7,8 @@ import {UniversalProfile} from "@lukso/lsp-smart-contracts/contracts/UniversalPr
 
 contract MainContract is UniversalProfile {
 
+    //UniversalProfile Profile userProfile = new UniversalProfile();
+
     //errors
     error invalid_Address();
     error address_Exists();
@@ -15,12 +17,11 @@ contract MainContract is UniversalProfile {
     struct userInfo{
         string userName;
         uint256 userAge;
-        string profileInfo;
     }
 
     //mapping 
     mapping (address => userInfo) registerUsers;
-    mapping(address => bool) public UniversalProfileExist;
+    mapping(userProfile => bool) public UniversalProfileExist;
 
     //arrays
     address[] public registerAccs;
@@ -33,12 +34,25 @@ contract MainContract is UniversalProfile {
         _;
     }
 
-    modifier NotZeroAddress(address userAddress) {
+    modifier notZeroAddress(address userAddress) {
         if (userAddress !== '0x0'){
             revert invalid_Address();
         }
         _;
     }
+
+    constructor(address _newOwner) UniversalProfile(newOwner) payable {
+        // // set key SupportedStandards:LSP3UniversalProfile
+        // _setData(_LSP3_SUPPORTED_STANDARDS_KEY, _LSP3_SUPPORTED_STANDARDS_VALUE);
+    }
+
+    function createUniversalProfile(address userAddress) public checkUser notZeroAddress {
+        (bool success, ) = userAddress.delegatecall(
+            abi.encodeWithSelector()
+        )
+    }
+
+
 
 
 
