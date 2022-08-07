@@ -16,9 +16,9 @@ contract MainContract is UniversalProfile {
     }
 
     userInfo public _userInfo;
+    uint256 numberOfUniversalProfile;
 
     //mapping
-    //mapping (address => userInfo) registerUsers;
     mapping(address => bool) public UniversalProfileExist;
 
     //arrays
@@ -51,6 +51,7 @@ contract MainContract is UniversalProfile {
         _userInfo.userAge = _userAge;
         UniversalProfileExist[_userAddress] = true;
         registerAccs.push(_userAddress);
+        numberOfUniversalProfile++;
 
         return true;
     }
@@ -60,5 +61,19 @@ contract MainContract is UniversalProfile {
         checkUser(_userAddress)
     {
         _userInfo.userName = _newUserName;
+    }
+
+    function changeAddress(address _oldAddress, address _newAddress)
+        public
+        checkUser(_oldAddress)
+    {
+        //when user wants to change their address
+    }
+
+    function deleteUniversalProfile(address _userAddress)
+        public
+        checkUser(_userAddress)
+    {
+        //when user wants to delete their account
     }
 }
