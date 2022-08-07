@@ -4,8 +4,6 @@ pragma solidity ^0.8.0;
 import {UniversalProfile} from "@lukso/lsp-smart-contracts/contracts/UniversalProfile.sol";
 
 contract MainContract is UniversalProfile {
-    //UniversalProfile Profile userProfile = new UniversalProfile();
-
     //errors
     error invalid_Address();
     error address_Exists();
@@ -52,6 +50,7 @@ contract MainContract is UniversalProfile {
         _userInfo.userName = _userName;
         _userInfo.userAge = _userAge;
         UniversalProfileExist[_userAddress] = true;
+        registerAccs.push(_userAddress);
 
         return true;
     }
