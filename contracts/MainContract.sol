@@ -1,12 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-//import {ERC725Account} from "./ERC725Account.sol";
 import {UniversalProfile} from "@lukso/lsp-smart-contracts/contracts/UniversalProfile.sol";
 
-
 contract MainContract is UniversalProfile {
-
     //UniversalProfile Profile userProfile = new UniversalProfile();
 
     //errors
@@ -14,48 +11,55 @@ contract MainContract is UniversalProfile {
     error address_Exists();
 
     //Structs
-    struct userInfo{
+    struct userInfo {
+        address userAddress;
         string userName;
         uint256 userAge;
     }
 
-    //mapping 
-    mapping (address => userInfo) registerUsers;
-    mapping(userProfile => bool) public UniversalProfileExist;
+    userInfo public _userInfo;
+
+    //mapping
+    //mapping (address => userInfo) registerUsers;
+    mapping(address => bool) public UniversalProfileExist;
 
     //arrays
     address[] public registerAccs;
-    
+
     //modifiers
-    modifier checkUser {
-        if(UniversalProfileExist == false){
+    modifier checkUser(address _userAddress) {
+        if (UniversalProfileExist[_userAddress] == false) {
             revert address_Exists();
         }
         _;
     }
 
-    modifier notZeroAddress(address userAddress) {
-        if (userAddress !== '0x0'){
+    modifier notZeroAddress() {
+        if (msg.sender != address(0)) {
             revert invalid_Address();
         }
         _;
     }
 
-    constructor(address _newOwner) UniversalProfile(newOwner) payable {
-        // // set key SupportedStandards:LSP3UniversalProfile
-        // _setData(_LSP3_SUPPORTED_STANDARDS_KEY, _LSP3_SUPPORTED_STANDARDS_VALUE);
+    constructor(address newOwner) UniversalProfile(newOwner) {}
+
+    function createUniversalProfile(
+        address _userAddress,
+        string memory _userName,
+        uint256 _userAge
+    ) public checkUser(_userAddress) notZeroAddress returns (bool) {
+        _userInfo.userAddress = _userAddress;
+        _userInfo.userName = _userName;
+        _userInfo.userAge = _userAge;
+        UniversalProfileExist[_userAddress] = true;
+
+        return true;
     }
 
-    function createUniversalProfile(address userAddress) public checkUser notZeroAddress {
-        (bool success, ) = userAddress.delegatecall(
-            abi.encodeWithSelector()
-        )
+    function updateUserName(address _userAddress, string memory _newUserName)
+        public
+        checkUser(_userAddress)
+    {
+        _userInfo.userName = _newUserName;
     }
-
-
-
-
-
-
-
 }
