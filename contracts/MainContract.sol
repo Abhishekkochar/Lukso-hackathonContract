@@ -4,9 +4,13 @@ pragma solidity ^0.8.0;
 import {UniversalProfile} from "@lukso/lsp-smart-contracts/contracts/UniversalProfile.sol";
 
 contract MainContract is UniversalProfile {
+    // state variable
+    address public newOwner;
+
     //errors
     error invalid_Address();
     error address_Exists();
+    error user_Not_Exist();
 
     //Structs
     struct userInfo {
@@ -25,9 +29,16 @@ contract MainContract is UniversalProfile {
     address[] public registerAccs;
 
     //modifiers
-    modifier checkUser(address _userAddress) {
-        if (UniversalProfileExist[_userAddress] == false) {
+    modifier checkUser(address newOwner) {
+        if (UniversalProfileExist[newOwner] == false) {
             revert address_Exists();
+        }
+        _;
+    }
+
+    modifier userExist(address _userAddress) {
+        if (UniversalProfileExist[_userAddress] == true) {
+            revert user_Not_Exist();
         }
         _;
     }
@@ -42,15 +53,15 @@ contract MainContract is UniversalProfile {
     constructor(address newOwner) UniversalProfile(newOwner) {}
 
     function createUniversalProfile(
-        address _userAddress,
+        address newOwner,
         string memory _userName,
         uint256 _userAge
-    ) public checkUser(_userAddress) notZeroAddress returns (bool) {
-        _userInfo.userAddress = _userAddress;
+    ) public checkUser(newOwner) notZeroAddress returns (bool) {
+        _userInfo.userAddress = newOwner;
         _userInfo.userName = _userName;
         _userInfo.userAge = _userAge;
-        UniversalProfileExist[_userAddress] = true;
-        registerAccs.push(_userAddress);
+        UniversalProfileExist[newOwner] = true;
+        registerAccs.push(newOwner);
         numberOfUniversalProfile++;
 
         return true;
@@ -58,21 +69,21 @@ contract MainContract is UniversalProfile {
 
     function updateUserName(address _userAddress, string memory _newUserName)
         public
-        checkUser(_userAddress)
+        userExist(_userAddress)
     {
         _userInfo.userName = _newUserName;
     }
 
     function changeAddress(address _oldAddress, address _newAddress)
         public
-        checkUser(_oldAddress)
+        userExist(_oldAddress)
     {
         //when user wants to change their address
     }
 
     function deleteUniversalProfile(address _userAddress)
         public
-        checkUser(_userAddress)
+        userExist(_userAddress)
     {
         //when user wants to delete their account
     }
