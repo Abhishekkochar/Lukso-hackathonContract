@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {UniversalProfile} from "@lukso/lsp-smart-contracts/contracts/UniversalProfile.sol";
+import "hardhat/console.sol";
 
 contract MainContract is UniversalProfile {
     // state variable
@@ -50,7 +51,9 @@ contract MainContract is UniversalProfile {
         _;
     }
 
-    constructor(address newOwner) UniversalProfile(newOwner) {}
+    constructor(address newOwner) UniversalProfile(newOwner) {
+        console.log("Current owner: ", newOwner);
+    }
 
     function createUniversalProfile(
         address newOwner,
@@ -64,6 +67,8 @@ contract MainContract is UniversalProfile {
         registerAccs.push(newOwner);
         numberOfUniversalProfile++;
 
+        console.log("Current owner in CUP: ", newOwner);
+
         return true;
     }
 
@@ -74,17 +79,17 @@ contract MainContract is UniversalProfile {
         _userInfo.userName = _newUserName;
     }
 
-    function changeAddress(address _oldAddress, address _newAddress)
-        public
-        userExist(_oldAddress)
-    {
-        //when user wants to change their address
-    }
+    // function changeAddress(address _oldAddress, address _newAddress)
+    //     public
+    //     userExist(_oldAddress)
+    // {
+    //     //when user wants to change their address
+    // }
 
-    function deleteUniversalProfile(address _userAddress)
-        public
-        userExist(_userAddress)
-    {
-        //when user wants to delete their account
-    }
+    // function deleteUniversalProfile(address _userAddress)
+    //     public
+    //     userExist(_userAddress)
+    // {
+    //     //when user wants to delete their account
+    // }
 }
