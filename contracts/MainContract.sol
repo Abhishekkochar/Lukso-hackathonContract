@@ -1,12 +1,18 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-import {UniversalProfile} from "@lukso/lsp-smart-contracts/contracts/UniversalProfile.sol";
+//import {UniversalProfile} from "@lukso/lsp-smart-contracts/contracts/UniversalProfile.sol";
+
+import "@lukso/lsp-smart-contracts/contracts/LSP0ERC725Account/LSP0ERC725AccountCore.sol" as UniversalProfile;
+
+import {_LSP3_SUPPORTED_STANDARDS_KEY, _LSP3_SUPPORTED_STANDARDS_VALUE} from "@lukso/lsp-smart-contracts/contracts/LSP3UniversalProfile/LSP3Constants.sol";
+
 import "hardhat/console.sol";
 
-contract MainContract is UniversalProfile {
+contract MainContract {
     // state variable
-    address public newOwner;
+    address public user;
+    address[] public registerAccs;
 
     //errors
     error invalid_Address();
@@ -26,8 +32,8 @@ contract MainContract is UniversalProfile {
     //mapping
     mapping(address => bool) public UniversalProfileExist;
 
-    //arrays
-    address[] public registerAccs;
+    //Event
+    event UniverseProfileCreated(address User, string userName, uint256 Age);
 
     //modifiers
     modifier checkUser(address newOwner) {
@@ -51,23 +57,36 @@ contract MainContract is UniversalProfile {
         _;
     }
 
-    constructor(address newOwner) UniversalProfile(newOwner) {
-        console.log("Current owner: ", newOwner);
+    //constructor
+    constructor(
+        address[] memory newUser,
+        string memory userName,
+        uint256 userAge
+    ) public {
+        createUniversalProfile(newUser, userName, userAge);
     }
 
     function createUniversalProfile(
-        address newOwner,
-        string memory _userName,
-        uint256 _userAge
-    ) public checkUser(newOwner) notZeroAddress returns (bool) {
-        _userInfo.userAddress = newOwner;
-        _userInfo.userName = _userName;
-        _userInfo.userAge = _userAge;
-        UniversalProfileExist[newOwner] = true;
-        registerAccs.push(newOwner);
+        address[] memory newUser,
+        string memory userName,
+        uint256 userAge
+    ) public returns (bool) {
+        for (uint256 i = 0; i < newUser.length; i++) {
+            user = newUser[i];
+            require(user != address(0), "INVALID_ADDRESS");
+            //require(!registerAccs[user], "USER_ALREADY_EXIT");
+
+            UniversalProfileExist[user] = true;
+            registerAccs.push(user);
+
+            _userInfo.userAddress = user;
+        }
+
+        _userInfo.userName = userName;
+        _userInfo.userAge = userAge;
         numberOfUniversalProfile++;
 
-        console.log("Current owner in CUP: ", newOwner);
+        emit UniverseProfileCreated(user, userName, userAge);
 
         return true;
     }
@@ -78,18 +97,4 @@ contract MainContract is UniversalProfile {
     {
         _userInfo.userName = _newUserName;
     }
-
-    // function changeAddress(address _oldAddress, address _newAddress)
-    //     public
-    //     userExist(_oldAddress)
-    // {
-    //     //when user wants to change their address
-    // }
-
-    // function deleteUniversalProfile(address _userAddress)
-    //     public
-    //     userExist(_userAddress)
-    // {
-    //     //when user wants to delete their account
-    // }
 }
