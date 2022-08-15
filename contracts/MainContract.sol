@@ -12,6 +12,10 @@ import "hardhat/console.sol";
 contract MainContract {
     // state variable
     address public user;
+    string userName;
+    uint256 userAge;
+
+    //Array
     address[] public registerAccs;
 
     //errors
@@ -58,11 +62,7 @@ contract MainContract {
     }
 
     //constructor
-    constructor(
-        address[] memory newUser,
-        string memory userName,
-        uint256 userAge
-    ) public {
+    constructor(address[] memory newUser) public {
         createUniversalProfile(newUser, userName, userAge);
     }
 
@@ -90,6 +90,11 @@ contract MainContract {
 
         return true;
     }
+
+    // function userInfo(address _userAddress, string memory userName, uint256 userAge) public {
+    //     require(registerAccs[_userAddress] == true, "NOT_REGSITERED");
+
+    // }
 
     function updateUserName(address _userAddress, string memory _newUserName)
         public
