@@ -3,13 +3,13 @@ pragma solidity ^0.8.0;
 
 //import {UniversalProfile} from "@lukso/lsp-smart-contracts/contracts/UniversalProfile.sol";
 
-import "@lukso/lsp-smart-contracts/contracts/LSP0ERC725Account/LSP0ERC725AccountCore.sol" as UniversalProfile;
+import {LSP0ERC725AccountCore} from "@lukso/lsp-smart-contracts/contracts/LSP0ERC725Account/LSP0ERC725AccountCore.sol";
 
 import {_LSP3_SUPPORTED_STANDARDS_KEY, _LSP3_SUPPORTED_STANDARDS_VALUE} from "@lukso/lsp-smart-contracts/contracts/LSP3UniversalProfile/LSP3Constants.sol";
 
 import "hardhat/console.sol";
 
-contract MainContract {
+contract MainContract is LSP0ERC725AccountCore {
     // state variable
     address public user;
     string userName;
@@ -63,18 +63,17 @@ contract MainContract {
 
     //constructor
     constructor(address[] memory newUser) public {
-        createUniversalProfile(newUser, userName, userAge);
+        createUniversalProfile(newUser);
     }
 
-    function createUniversalProfile(
-        address[] memory newUser,
-        string memory userName,
-        uint256 userAge
-    ) public returns (bool) {
+    function createUniversalProfile(address[] memory newUser)
+        public
+        returns (bool)
+    {
         for (uint256 i = 0; i < newUser.length; i++) {
             user = newUser[i];
             require(user != address(0), "INVALID_ADDRESS");
-            //require(!registerAccs[user], "USER_ALREADY_EXIT");
+            require(!UniversalProfileExist[user], "USER_ALREADY_EXIT");
 
             UniversalProfileExist[user] = true;
             registerAccs.push(user);
@@ -82,19 +81,21 @@ contract MainContract {
             _userInfo.userAddress = user;
         }
 
+        addingUserData(user, userName, userAge);
+        return true;
+    }
+
+    function addingUserData(
+        address _newUser,
+        string memory userName,
+        uint256 userAge
+    ) public checkUser(_newUser) userExist(_newUser) {
         _userInfo.userName = userName;
         _userInfo.userAge = userAge;
         numberOfUniversalProfile++;
 
         emit UniverseProfileCreated(user, userName, userAge);
-
-        return true;
     }
-
-    // function userInfo(address _userAddress, string memory userName, uint256 userAge) public {
-    //     require(registerAccs[_userAddress] == true, "NOT_REGSITERED");
-
-    // }
 
     function updateUserName(address _userAddress, string memory _newUserName)
         public

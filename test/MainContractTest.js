@@ -16,7 +16,7 @@ describe("Creating an Universal profile", function () {
 
         //deploying the contract
 
-        ownerArray = [userAcc1];
+        ownerArray = [userAcc1.address];
 
         const uProfile = await hre.ethers.getContractFactory("MainContract");
         universalProfile = await uProfile.connect(deployingAddress).deploy(ownerArray);
@@ -34,15 +34,15 @@ describe("Creating an Universal profile", function () {
         console.log(table.toString());
     })
 
-    // it("UserAcc1 creates a Uinversal Profile", async function () {
-    //     let userAddress, userName, userAge;
-    //     userAddress = userAcc2.address;
-    //     userName = "Change name";
-    //     userAge = "27";
-    //     await universalProfile.createUniversalProfile(userAddress, userName, userAge);
-    //     // let address = await universalProfile._userInfo().userAddress;
-    //     // console.log('userAcc1 address: ', address);
-    //     // let result = await universalProfile._userInfo().userName;
-    //     // console.log('userAcc1 change Username: ', result);
-    // })
+    it("UserAcc1 creates a Uinversal Profile", async function () {
+        let userAddress, userName, userAge;
+        userAddress = [userAcc1.address, userAcc2.address];
+        userName = "Change name";
+        userAge = "27";
+        await universalProfile.createUniversalProfile(userAddress, userName, userAge);
+        let address = await universalProfile._userInfo().userAddress;
+        console.log('userAcc1 address: ', address);
+        let result = await universalProfile._userInfo().userName;
+        console.log('userAcc1 change Username: ', result);
+    })
 })
