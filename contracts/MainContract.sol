@@ -62,40 +62,65 @@ contract MainContract is LSP0ERC725AccountCore {
     }
 
     //constructor
-    constructor(address[] memory newUser) public {
-        createUniversalProfile(newUser);
+    // constructor(address[] memory newUser) public {
+    //     createUniversalProfile(newUser);
+    // }
+
+    constructor(address user) public {
+        user = msg.sender;
     }
 
-    function createUniversalProfile(address[] memory newUser)
-        public
-        returns (bool)
-    {
-        for (uint256 i = 0; i < newUser.length; i++) {
-            user = newUser[i];
-            require(user != address(0), "INVALID_ADDRESS");
-            require(!UniversalProfileExist[user], "USER_ALREADY_EXIT");
+    // function createUniversalProfile(address[] memory newUser)
+    //     public
+    //     returns (bool)
+    // {
+    //     for (uint256 i = 0; i < newUser.length; i++) {
+    //         user = newUser[i];
+    //         require(user != address(0), "INVALID_ADDRESS");
+    //         require(!UniversalProfileExist[user], "USER_ALREADY_EXIT");
 
-            UniversalProfileExist[user] = true;
-            registerAccs.push(user);
+    //         UniversalProfileExist[user] = true;
+    //         registerAccs.push(user);
 
-            _userInfo.userAddress = user;
-        }
+    //         _userInfo.userAddress = user;
+    //     }
 
-        addingUserData(user, userName, userAge);
-        return true;
-    }
+    //     //addingUserData(user, userName, userAge);
+    //     return true;
+    // }
 
-    function addingUserData(
-        address _newUser,
+    function createUniversalProfile(
+        address user,
         string memory userName,
         uint256 userAge
-    ) public checkUser(_newUser) userExist(_newUser) {
+    ) public returns (bool) {
+        require(user != address(0), "INVALID_ADDRESS");
+        require(!UniversalProfileExist[user], "USER_ALREADY_EXIT");
+
+        UniversalProfileExist[user] = true;
+        registerAccs.push(user);
+
+        _userInfo.userAddress = user;
         _userInfo.userName = userName;
         _userInfo.userAge = userAge;
         numberOfUniversalProfile++;
 
+        //addingUserData(user, userName, userAge);
         emit UniverseProfileCreated(user, userName, userAge);
+        return true;
     }
+
+    // function addingUserData(
+    //     address _newUser,
+    //     string memory userName,
+    //     uint256 userAge
+    // ) public checkUser(_newUser) userExist(_newUser) {
+    //     _userInfo.userName = userName;
+    //     _userInfo.userAge = userAge;
+    //     numberOfUniversalProfile++;
+
+    //     emit UniverseProfileCreated(user, userName, userAge);
+    // }
 
     function updateUserName(address _userAddress, string memory _newUserName)
         public
