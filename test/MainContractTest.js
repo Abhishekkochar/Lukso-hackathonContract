@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-//const { expectRevert } = require('@openzeppelin/test-helpers');
+const { expectRevert } = require('@openzeppelin/test-helpers');
 const Table = require("cli-table3");
 
 describe("Creating an Universal profile", function () {
@@ -19,7 +19,7 @@ describe("Creating an Universal profile", function () {
         //ownerArray = [userAcc1.address];
 
         const uProfile = await hre.ethers.getContractFactory("MainContract");
-        universalProfile = await uProfile.connect(deployingAddress).deploy(userAcc2.address);
+        universalProfile = await uProfile.deploy(deployingAddress.address);
 
         table.push(
             ['Deploying Address is: ', deployingAddress.address],
@@ -35,14 +35,46 @@ describe("Creating an Universal profile", function () {
     })
 
     it("UserAcc1 creates a Uinversal Profile", async function () {
-        let userAddress, userName, userAge;
-        userAddress = userAcc2.address;
-        userName = "Change name";
+        let userAddress1, userAddress2, userAddress3, userName, userAge;
+        //first test
+        userAddress1 = userAcc1.address;
+        userName = "Sam";
         userAge = "27";
-        await universalProfile.createUniversalProfile(userAddress, userName, userAge);
-        let address = await universalProfile.user();
-        console.log('userAcc11 address: ', address);
-        // let result = await universalProfile.userName();
-        // console.log('userAcc1 change Username: ', result);
+        await universalProfile.createUniversalProfile(userAddress1, userName, userAge);
+        let result = await universalProfile._userInfo();
+        console.log("user 1 details: ", result);
+        console.log('user 1 profile exist: ', universalProfile.UniversalProfileExist());
+
+        //Second test
+        userAddress2 = userAcc2.address;
+        userName = "Amit";
+        userAge = "30";
+        await universalProfile.createUniversalProfile(userAddress2, userName, userAge);
+        result = await universalProfile._userInfo();
+        console.log("user 2 details: ", result);
+
+        //third test
+        userAddress3 = userAcc3.address;
+        userName = "Abhi";
+        userAge = "35";
+        await universalProfile.createUniversalProfile(userAddress3, userName, userAge);
+        result = await universalProfile._userInfo();
+        console.log("user 3 details: ", result);
+
+        //userAddress 1, 2 and 3 try to resgiter again;
+        await expectRevert.unspecified(universalProfile.createUniversalProfile(userAcc1.address, "alreadyExist", "20"));
+        await expectRevert.unspecified(universalProfile.createUniversalProfile(userAcc2.address, "alreadyExist", "20"));
+        await expectRevert.unspecified(universalProfile.createUniversalProfile(userAcc3.address, "alreadyExist", "20"));
+        //Inavlid address
+        let invalidAddress = "0x0000000000000000000000000000000000000000"
+        await expectRevert.unspecified(universalProfile.createUniversalProfile(invalidAddress, "alreadyExist", "20"));
+
+        result = await universalProfile.numberOfUniversalProfile();
+        console.log("Number of UP: ", result);
+
+        // let newName = "David";
+        // await universalProfile.connect(userAddress1).updateUserName(userAddress1, newName);
+
+
     })
 })

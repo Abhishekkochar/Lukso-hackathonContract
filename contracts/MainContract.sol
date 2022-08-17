@@ -12,8 +12,8 @@ import "hardhat/console.sol";
 contract MainContract is LSP0ERC725AccountCore {
     // state variable
     address public user;
-    string userName;
-    uint256 userAge;
+    string public userName;
+    uint256 public userAge;
 
     //Array
     address[] public registerAccs;
@@ -31,7 +31,8 @@ contract MainContract is LSP0ERC725AccountCore {
     }
 
     userInfo public _userInfo;
-    uint256 numberOfUniversalProfile;
+
+    uint256 public numberOfUniversalProfile;
 
     //mapping
     mapping(address => bool) public UniversalProfileExist;
@@ -61,33 +62,10 @@ contract MainContract is LSP0ERC725AccountCore {
         _;
     }
 
-    //constructor
-    // constructor(address[] memory newUser) public {
-    //     createUniversalProfile(newUser);
-    // }
-
     constructor(address _user) public {
         user = _user;
+        //console.log(user);
     }
-
-    // function createUniversalProfile(address[] memory newUser)
-    //     public
-    //     returns (bool)
-    // {
-    //     for (uint256 i = 0; i < newUser.length; i++) {
-    //         user = newUser[i];
-    //         require(user != address(0), "INVALID_ADDRESS");
-    //         require(!UniversalProfileExist[user], "USER_ALREADY_EXIT");
-
-    //         UniversalProfileExist[user] = true;
-    //         registerAccs.push(user);
-
-    //         _userInfo.userAddress = user;
-    //     }
-
-    //     //addingUserData(user, userName, userAge);
-    //     return true;
-    // }
 
     function createUniversalProfile(
         address user,
@@ -96,7 +74,11 @@ contract MainContract is LSP0ERC725AccountCore {
     ) public returns (bool) {
         require(user != address(0), "INVALID_ADDRESS");
         require(!UniversalProfileExist[user], "USER_ALREADY_EXIT");
-        console.log("user address in the contract: " + user);
+
+        //debuging
+        console.log("user Address: ", user);
+        console.log("user name: ", userName);
+        console.log("user age: ", userAge);
 
         UniversalProfileExist[user] = true;
         registerAccs.push(user);
@@ -106,22 +88,14 @@ contract MainContract is LSP0ERC725AccountCore {
         _userInfo.userAge = userAge;
         numberOfUniversalProfile++;
 
-        //addingUserData(user, userName, userAge);
+        //debuging
+        console.log("User Address in Struct: ", _userInfo.userAddress);
+        console.log("username in Struct: ", _userInfo.userName);
+        console.log("userAge in Struct: ", _userInfo.userAge);
+
         emit UniverseProfileCreated(user, userName, userAge);
         return true;
     }
-
-    // function addingUserData(
-    //     address _newUser,
-    //     string memory userName,
-    //     uint256 userAge
-    // ) public checkUser(_newUser) userExist(_newUser) {
-    //     _userInfo.userName = userName;
-    //     _userInfo.userAge = userAge;
-    //     numberOfUniversalProfile++;
-
-    //     emit UniverseProfileCreated(user, userName, userAge);
-    // }
 
     function updateUserName(address _userAddress, string memory _newUserName)
         public
