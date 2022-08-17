@@ -68,7 +68,6 @@ contract MainContract is LSP0ERC725AccountCore {
 
     constructor(address _user) public {
         user = _user;
-        //createUniversalProfile(user, userName, userAge);
     }
 
     // function createUniversalProfile(address[] memory newUser)
@@ -97,6 +96,7 @@ contract MainContract is LSP0ERC725AccountCore {
     ) public returns (bool) {
         require(user != address(0), "INVALID_ADDRESS");
         require(!UniversalProfileExist[user], "USER_ALREADY_EXIT");
+        console.log("user address in the contract: " + user);
 
         UniversalProfileExist[user] = true;
         registerAccs.push(user);
