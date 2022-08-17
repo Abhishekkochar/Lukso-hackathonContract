@@ -66,8 +66,9 @@ contract MainContract is LSP0ERC725AccountCore {
     //     createUniversalProfile(newUser);
     // }
 
-    constructor(address user) public {
-        user = msg.sender;
+    constructor(address _user) public {
+        user = _user;
+        //createUniversalProfile(user, userName, userAge);
     }
 
     // function createUniversalProfile(address[] memory newUser)
